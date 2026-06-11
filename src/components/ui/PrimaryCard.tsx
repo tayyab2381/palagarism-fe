@@ -13,7 +13,7 @@ export function PrimaryCard({
 }: PrimaryCardProps) {
   return (
     <div
-      className={`bg-snow rounded-card p-7 ${className}`.trim()}
+      className={`bg-snow rounded-card p-7 shadow-card-inset ${className}`.trim()}
       style={{ boxShadow: "var(--shadow-card-inset)" }}
       {...props}
     >

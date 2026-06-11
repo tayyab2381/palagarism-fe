@@ -15,13 +15,13 @@ export function MatchCard({ match }: MatchCardProps) {
           href={match.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-medium text-ink underline"
+          className="text-body font-medium text-ink underline hover:opacity-80"
         >
           {match.url}
         </a>
         <SimilarityScoreBadge score={match.similarity} />
       </div>
-      <p className="mt-3 text-sm font-normal text-steel">
+      <p className="mt-3 text-body font-normal text-steel">
         {match.matchedText || "No preview available for this match."}
       </p>
     </SecondaryCard>

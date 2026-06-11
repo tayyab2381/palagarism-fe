@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { AuthField } from "@/components/auth/AuthField";
 import { AuthSubmitButton } from "@/components/auth/AuthSubmitButton";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { AuthLayout } from "@/components/layout/AuthLayout";
+import { FormError } from "@/components/ui/FormError";
 import { PrimaryCard } from "@/components/ui/PrimaryCard";
 import {
   authenticate,
@@ -88,36 +91,30 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-mist px-6 pb-16 pt-24">
-      <div className="mx-auto max-w-md">
-        <Link
-          href="/"
-          className="block text-center text-lg font-semibold text-obsidian"
-        >
-          PlagiarCheck
-        </Link>
+    <AuthLayout>
+      <ErrorBoundary fallbackTitle="Sign up unavailable">
+      <PrimaryCard className="p-10">
+        <h1 className="text-heading font-bold text-obsidian">
+          Create your account
+        </h1>
+        <p className="mt-2 text-body font-normal text-steel">
+          Free plagiarism checks. No credit card. No document storage.
+        </p>
 
-        <PrimaryCard className="mt-8 p-10">
-          <h1 className="text-[32px] font-bold text-obsidian">
-            Create your account
-          </h1>
-          <p className="mt-2 text-sm font-normal text-steel">
-            Free plagiarism checks. No credit card. No document storage.
-          </p>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
+          <AuthField
+            id="email"
+            label="Email"
+            type="email"
+            name="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            error={errors.email}
+          />
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
-            <AuthField
-              id="email"
-              label="Email"
-              type="email"
-              name="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              error={errors.email}
-            />
-
+          <div>
             <AuthField
               id="password"
               label="Password"
@@ -129,41 +126,46 @@ export default function SignupPage() {
               onChange={(event) => setPassword(event.target.value)}
               error={errors.password}
             />
+            <p className="mt-1 text-caption font-normal text-steel">
+              Use at least 8 characters with a mix of letters and numbers.
+            </p>
+          </div>
 
-            <AuthField
-              id="confirmPassword"
-              label="Confirm password"
-              type="password"
-              name="confirmPassword"
-              autoComplete="new-password"
-              placeholder="Repeat your password"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              error={errors.confirmPassword}
-            />
+          <AuthField
+            id="confirmPassword"
+            label="Confirm password"
+            type="password"
+            name="confirmPassword"
+            autoComplete="new-password"
+            placeholder="Repeat your password"
+            value={confirmPassword}
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            error={errors.confirmPassword}
+          />
 
-            {errors.form ? (
-              <p className="text-sm font-normal text-red-600" role="alert">
-                {errors.form}
-              </p>
-            ) : null}
+          {errors.form ? <FormError>{errors.form}</FormError> : null}
 
-            <AuthSubmitButton
-              isLoading={isLoading}
-              loadingText="Creating account..."
-            >
-              Create Account
-            </AuthSubmitButton>
-          </form>
+          <AuthSubmitButton
+            isLoading={isLoading}
+            loadingText="Creating account..."
+          >
+            Create Account
+          </AuthSubmitButton>
+        </form>
 
-          <p className="mt-6 text-center text-sm text-steel">
+        <div className="mt-6 border-t border-pebble pt-6">
+          <p className="text-center text-body font-normal text-steel">
             Already have an account?{" "}
-            <Link href="/login" className="underline hover:text-ink">
+            <Link
+              href="/login"
+              className="font-medium text-ink underline hover:opacity-80"
+            >
               Sign in
             </Link>
           </p>
-        </PrimaryCard>
-      </div>
-    </div>
+        </div>
+      </PrimaryCard>
+      </ErrorBoundary>
+    </AuthLayout>
   );
 }

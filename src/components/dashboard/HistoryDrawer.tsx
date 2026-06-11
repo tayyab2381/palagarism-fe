@@ -1,6 +1,7 @@
 "use client";
 
 import { SimilarityScoreBadge } from "@/components/ui/SimilarityScoreBadge";
+import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { SecondaryCard } from "@/components/ui/SecondaryCard";
 import { formatCheckedAt } from "@/lib/score-utils";
 import type { CheckHistory } from "@/store/plagiarismStore";
@@ -38,14 +39,12 @@ export function HistoryDrawer({
 
       <SecondaryCard className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto rounded-b-none p-4">
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-xs font-medium uppercase text-steel">This Session</p>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-sm text-steel underline hover:text-ink"
-          >
+          <p className="text-caption font-medium uppercase text-steel">
+            This Session
+          </p>
+          <SecondaryButton type="button" onClick={onClose} className="px-3 py-2">
             Close
-          </button>
+          </SecondaryButton>
         </div>
 
         <div className="space-y-2">
@@ -57,15 +56,15 @@ export function HistoryDrawer({
                 onSelect(entry.id);
                 onClose();
               }}
-              className={`w-full rounded-card-sm bg-fog p-3 text-left transition-colors hover:bg-pebble/40 ${
-                entry.id === currentId ? "ring-1 ring-pebble" : ""
+              className={`w-full rounded-card-sm p-3 text-left transition-opacity hover:opacity-90 ${
+                entry.id === currentId ? "bg-snow shadow-card-inset" : "bg-fog"
               }`}
             >
               <div className="flex items-start justify-between gap-2">
-                <p className="text-sm font-medium text-ink">{entry.title}</p>
+                <p className="text-body font-medium text-ink">{entry.title}</p>
                 <SimilarityScoreBadge score={entry.result.overallScore} />
               </div>
-              <p className="mt-2 text-xs font-normal text-steel">
+              <p className="mt-2 text-caption font-normal text-steel">
                 {formatCheckedAt(entry.checkedAt)}
               </p>
             </button>
@@ -73,16 +72,16 @@ export function HistoryDrawer({
         </div>
 
         {history.length > 0 ? (
-          <button
+          <SecondaryButton
             type="button"
             onClick={() => {
               onClearAll();
               onClose();
             }}
-            className="mt-4 text-sm text-steel underline hover:text-ink"
+            className="mt-4 w-full"
           >
             Clear All History
-          </button>
+          </SecondaryButton>
         ) : null}
       </SecondaryCard>
     </div>

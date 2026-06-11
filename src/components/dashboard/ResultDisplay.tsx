@@ -1,6 +1,9 @@
 import { MatchCard } from "@/components/dashboard/MatchCard";
 import { ScoreCircle } from "@/components/dashboard/ScoreCircle";
+import { DarkFilledBadge } from "@/components/ui/DarkFilledBadge";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { SecondaryCard } from "@/components/ui/SecondaryCard";
+import { StatBlock } from "@/components/ui/StatBlock";
 import type { PlagiarismResult } from "@/lib/plagiarism/types";
 
 interface ResultDisplayProps {
@@ -23,19 +26,26 @@ export function ResultDisplay({ result }: ResultDisplayProps) {
         <div className="grid w-full flex-1 gap-4 sm:grid-cols-3">
           {stats.map((stat) => (
             <SecondaryCard key={stat.label} className="bg-snow p-4">
-              <p className="text-2xl font-bold text-obsidian">{stat.value}</p>
-              <p className="mt-1 text-xs font-normal text-steel">{stat.label}</p>
+              <StatBlock value={stat.value} label={stat.label} />
             </SecondaryCard>
           ))}
         </div>
       </div>
 
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-ink">Matches</h2>
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="text-heading-sm font-semibold text-ink">Matches</h2>
+          <DarkFilledBadge>{result.matches.length} found</DarkFilledBadge>
+        </div>
+
         {result.matches.length === 0 ? (
-          <p className="mt-3 text-sm font-normal text-steel">
-            No significant matches found in this check.
-          </p>
+          <div className="mt-4">
+            <EmptyState
+              title="No matches found"
+              description="No significant matches were detected in this check. Your content appears largely unique."
+              className="p-6"
+            />
+          </div>
         ) : (
           <div className="mt-4 space-y-3">
             {result.matches.map((match) => (

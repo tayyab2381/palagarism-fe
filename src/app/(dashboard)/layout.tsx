@@ -1,8 +1,10 @@
-// Dashboard shell — requires auth
+import { DashboardShell } from "@/components/layout/DashboardShell";
+
+/** Dashboard route group layout — enterprise shell with sidebar and top bar. */
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return children;
+  return <DashboardShell>{children}</DashboardShell>;
 }

@@ -8,7 +8,7 @@ interface SecondaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const baseClassName =
-  "inline-flex items-center justify-center bg-snow text-graphite border border-graphite text-sm font-medium px-5 py-3 rounded-pill hover:bg-mist transition-colors";
+  "inline-flex items-center justify-center bg-snow text-graphite border border-graphite text-sm font-medium px-5 py-3 rounded-pill hover:opacity-90 transition-opacity";
 
 /** Outlined white pill button for secondary actions. */
 export function SecondaryButton({

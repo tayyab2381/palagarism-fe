@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { AuthField } from "@/components/auth/AuthField";
 import { AuthSubmitButton } from "@/components/auth/AuthSubmitButton";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { AuthLayout } from "@/components/layout/AuthLayout";
+import { FormError } from "@/components/ui/FormError";
 import { PrimaryCard } from "@/components/ui/PrimaryCard";
 import {
   authenticate,
@@ -78,65 +81,59 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-mist px-6 pb-16 pt-24">
-      <div className="mx-auto max-w-md">
-        <Link
-          href="/"
-          className="block text-center text-lg font-semibold text-obsidian"
-        >
-          PlagiarCheck
-        </Link>
+    <AuthLayout>
+      <ErrorBoundary fallbackTitle="Sign in unavailable">
+      <PrimaryCard className="p-10">
+        <h1 className="text-heading font-bold text-obsidian">Welcome back</h1>
+        <p className="mt-2 text-body font-normal text-steel">
+          Sign in to run plagiarism checks on your documents.
+        </p>
 
-        <PrimaryCard className="mt-8 p-10">
-          <h1 className="text-[32px] font-bold text-obsidian">Welcome back</h1>
-          <p className="mt-2 text-sm font-normal text-steel">
-            Sign in to run plagiarism checks on your documents.
-          </p>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
+          <AuthField
+            id="email"
+            label="Email"
+            type="email"
+            name="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            error={errors.email}
+          />
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
-            <AuthField
-              id="email"
-              label="Email"
-              type="email"
-              name="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              error={errors.email}
-            />
+          <AuthField
+            id="password"
+            label="Password"
+            type="password"
+            name="password"
+            autoComplete="current-password"
+            placeholder="Your password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            error={errors.password}
+          />
 
-            <AuthField
-              id="password"
-              label="Password"
-              type="password"
-              name="password"
-              autoComplete="current-password"
-              placeholder="Your password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              error={errors.password}
-            />
+          {errors.form ? <FormError>{errors.form}</FormError> : null}
 
-            {errors.form ? (
-              <p className="text-sm font-normal text-red-600" role="alert">
-                {errors.form}
-              </p>
-            ) : null}
+          <AuthSubmitButton isLoading={isLoading} loadingText="Signing in...">
+            Sign In
+          </AuthSubmitButton>
+        </form>
 
-            <AuthSubmitButton isLoading={isLoading} loadingText="Signing in...">
-              Sign In
-            </AuthSubmitButton>
-          </form>
-
-          <p className="mt-6 text-center text-sm text-steel">
+        <div className="mt-6 border-t border-pebble pt-6">
+          <p className="text-center text-body font-normal text-steel">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="underline hover:text-ink">
+            <Link
+              href="/signup"
+              className="font-medium text-ink underline hover:opacity-80"
+            >
               Sign up
             </Link>
           </p>
-        </PrimaryCard>
-      </div>
-    </div>
+        </div>
+      </PrimaryCard>
+      </ErrorBoundary>
+    </AuthLayout>
   );
 }

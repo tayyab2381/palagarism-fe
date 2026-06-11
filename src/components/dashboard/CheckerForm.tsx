@@ -2,6 +2,7 @@
 
 import { PrimaryCard } from "@/components/ui/PrimaryCard";
 import { PrimaryCtaButton } from "@/components/ui/PrimaryCtaButton";
+import { FormError } from "@/components/ui/FormError";
 import { TextArea } from "@/components/ui/TextArea";
 import { TextInput } from "@/components/ui/TextInput";
 import { countWords } from "@/lib/plagiarism/utils";
@@ -33,55 +34,68 @@ export function CheckerForm({
   const canSubmit = wordCount > 0 && !isOverLimit && !isChecking;
 
   return (
-    <PrimaryCard>
-      <TextInput
-        type="text"
-        placeholder="Give this check a name (optional)"
-        value={title}
-        onChange={(event) => onTitleChange(event.target.value)}
-        className="py-2"
-        aria-label="Check title"
-      />
-
-      <TextArea
-        placeholder="Paste your text here..."
-        value={text}
-        onChange={(event) => onTextChange(event.target.value)}
-        className="mt-4 min-h-48 resize-y"
-        aria-label="Text to check"
-      />
-
-      <p
-        className={`mt-2 text-right text-xs ${isOverLimit ? "text-red-600" : "text-ash"}`}
-      >
-        {wordCount.toLocaleString()} / {MAX_WORDS.toLocaleString()} words
-      </p>
-
-      {error ? (
-        <p className="mt-3 text-sm font-normal text-red-600" role="alert">
-          {error}
+    <>
+      <PrimaryCard>
+        <p className="text-caption font-medium uppercase text-steel">
+          New plagiarism check
         </p>
-      ) : null}
 
-      {isChecking ? (
-        <div className="mt-6">
-          <div className="relative h-1 overflow-hidden rounded-full bg-fog">
-            <div className="absolute inset-y-0 left-0 w-1/3 animate-shimmer rounded-full bg-obsidian" />
-          </div>
-          <p className="mt-3 text-sm font-normal text-steel">
-            Scanning across the web...
-          </p>
-        </div>
-      ) : (
-        <PrimaryCtaButton
-          type="button"
-          className="mt-6 w-full"
-          disabled={!canSubmit}
-          onClick={onSubmit}
+        <TextInput
+          type="text"
+          placeholder="Give this check a name (optional)"
+          value={title}
+          onChange={(event) => onTitleChange(event.target.value)}
+          className="mt-4 py-2"
+          aria-label="Check title"
+        />
+
+        <TextArea
+          placeholder="Paste your text here..."
+          value={text}
+          onChange={(event) => onTextChange(event.target.value)}
+          className="mt-4 min-h-48 resize-y"
+          aria-label="Text to check"
+        />
+
+        <p
+          className={`mt-2 text-right text-caption ${isOverLimit ? "font-semibold text-obsidian" : "text-steel"}`}
         >
-          Check for Plagiarism
-        </PrimaryCtaButton>
-      )}
-    </PrimaryCard>
+          {wordCount.toLocaleString()} / {MAX_WORDS.toLocaleString()} words
+        </p>
+
+        {isOverLimit ? (
+          <FormError className="mt-3">
+            Text exceeds the {MAX_WORDS.toLocaleString()} word limit. Please
+            shorten your text before checking.
+          </FormError>
+        ) : null}
+
+        {error ? <FormError className="mt-3">{error}</FormError> : null}
+
+        {isChecking ? (
+          <div className="mt-6">
+            <div className="relative h-1 overflow-hidden rounded-full bg-fog">
+              <div className="absolute inset-y-0 left-0 w-1/3 animate-shimmer rounded-full bg-obsidian" />
+            </div>
+            <p className="mt-3 text-body font-normal text-steel">
+              Scanning across the web...
+            </p>
+            <div className="mt-6 space-y-3">
+              <div className="h-24 animate-pulse rounded-card-sm bg-fog" />
+              <div className="h-16 animate-pulse rounded-card-sm bg-fog" />
+            </div>
+          </div>
+        ) : (
+          <PrimaryCtaButton
+            type="button"
+            className="mt-6 w-full"
+            disabled={!canSubmit}
+            onClick={onSubmit}
+          >
+            Check for Plagiarism
+          </PrimaryCtaButton>
+        )}
+      </PrimaryCard>
+    </>
   );
 }

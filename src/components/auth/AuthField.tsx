@@ -21,7 +21,7 @@ export function AuthField({
       </label>
       <TextInput id={id} className="mt-2" aria-invalid={Boolean(error)} {...props} />
       {error ? (
-        <p className="mt-1 text-sm font-normal text-red-600" role="alert">
+        <p className="mt-1 text-sm font-medium text-obsidian" role="alert">
           {error}
         </p>
       ) : null}

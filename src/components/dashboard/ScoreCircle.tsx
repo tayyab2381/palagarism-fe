@@ -1,10 +1,11 @@
+import { SimilarityScoreBadge } from "@/components/ui/SimilarityScoreBadge";
 import { getScoreTone } from "@/lib/score-utils";
 
 interface ScoreCircleProps {
   score: number;
 }
 
-/** Large circular similarity score with color-coded stroke. */
+/** Large circular similarity score with neutral obsidian ring. */
 export function ScoreCircle({ score }: ScoreCircleProps) {
   const boundedScore = Math.min(100, Math.max(0, Math.round(score)));
   const tone = getScoreTone(boundedScore);
@@ -30,7 +31,7 @@ export function ScoreCircle({ score }: ScoreCircleProps) {
             cy="48"
             r={radius}
             fill="none"
-            stroke={tone.strokeColor}
+            stroke="#09090b"
             strokeWidth="8"
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -38,14 +39,13 @@ export function ScoreCircle({ score }: ScoreCircleProps) {
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-[32px] font-bold text-obsidian">
+          <span className="text-heading font-bold text-obsidian">
             {boundedScore}%
           </span>
         </div>
       </div>
-      <p className={`mt-3 text-sm font-semibold ${tone.textColor}`}>
-        {tone.label}
-      </p>
+      <SimilarityScoreBadge score={boundedScore} className="mt-3" />
+      <p className="mt-2 text-body font-semibold text-ink">{tone.label}</p>
     </div>
   );
 }
