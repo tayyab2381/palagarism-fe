@@ -1,4 +1,5 @@
-// Main plagiarism checker UI
+import { CheckerDashboard } from "@/components/dashboard/CheckerDashboard";
+
 export default function CheckPage() {
-  return null;
+  return <CheckerDashboard />;
 }

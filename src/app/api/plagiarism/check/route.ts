@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth-jwt";
 import {
@@ -28,6 +29,18 @@ function extractBearerToken(request: Request): string | null {
   }
 
   return authorization.slice(7).trim();
+}
+
+/** Reads JWT from Authorization header or httpOnly auth_token cookie. */
+async function extractAuthToken(request: Request): Promise<string | null> {
+  const bearerToken = extractBearerToken(request);
+
+  if (bearerToken) {
+    return bearerToken;
+  }
+
+  const cookieStore = await cookies();
+  return cookieStore.get("auth_token")?.value ?? null;
 }
 
 /** Enforces per-user hourly request limits using an in-memory store. */
@@ -82,7 +95,7 @@ function parseRequestBody(
 export async function POST(
   request: Request,
 ): Promise<NextResponse<ApiResponse<PlagiarismResult>>> {
-  const token = extractBearerToken(request);
+  const token = await extractAuthToken(request);
 
   if (!token) {
     return NextResponse.json(
