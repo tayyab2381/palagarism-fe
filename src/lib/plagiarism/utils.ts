@@ -41,27 +41,3 @@ export function buildPlagiarismResult(
     processedAt: new Date().toISOString(),
   };
 }
-
-/** Picks evenly spaced sentences as search probes for the Google provider. */
-export function selectRepresentativeSentences(
-  text: string,
-  targetCount = 6,
-): string[] {
-  const sentences = text
-    .split(/(?<=[.!?])\s+/)
-    .map((sentence) => sentence.trim())
-    .filter((sentence) => sentence.length > 20);
-
-  if (sentences.length === 0) {
-    return [text.trim().slice(0, 200)];
-  }
-
-  if (sentences.length <= targetCount) {
-    return sentences;
-  }
-
-  const step = Math.max(1, Math.floor(sentences.length / targetCount));
-
-  return Array.from({ length: targetCount }, (_, index) => sentences[index * step])
-    .filter((sentence): sentence is string => Boolean(sentence));
-}

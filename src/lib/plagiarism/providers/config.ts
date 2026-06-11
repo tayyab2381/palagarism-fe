@@ -1,22 +1,9 @@
-export interface ProviderCredentials {
-  googleApiKey: string;
-  googleEngineId: string;
-  copyleaksApiKey: string;
-  copyleaksEmail: string;
-}
-
-/** Returns true when Google Custom Search credentials are present. */
-export function isGoogleConfigured(credentials: ProviderCredentials): boolean {
-  return (
-    credentials.googleApiKey.trim() !== "" &&
-    credentials.googleEngineId.trim() !== ""
-  );
+export interface CopyleaksCredentials {
+  apiKey: string;
+  email: string;
 }
 
 /** Returns true when Copyleaks API credentials are present. */
-export function isCopyleaksConfigured(credentials: ProviderCredentials): boolean {
-  return (
-    credentials.copyleaksApiKey.trim() !== "" &&
-    credentials.copyleaksEmail.trim() !== ""
-  );
+export function isCopyleaksConfigured(credentials: CopyleaksCredentials): boolean {
+  return credentials.apiKey.trim() !== "" && credentials.email.trim() !== "";
 }

@@ -1,11 +1,9 @@
-import { env } from "@/config/env";
-import {
-  detectWithProviderFallback,
-  getSingleProvider,
-} from "@/lib/plagiarism/providers/registry";
+import { CopyleaksFreeProvider } from "@/lib/plagiarism/providers/copyleaks-free";
 import type { PlagiarismRequest, PlagiarismResult } from "@/lib/plagiarism/types";
 import { PlagiarismProviderError } from "@/lib/plagiarism/types";
 import { validatePlagiarismText } from "@/lib/plagiarism/utils";
+
+const copyleaksProvider = new CopyleaksFreeProvider();
 
 export class PlagiarismDetectionError extends Error {
   readonly code: string;
@@ -17,33 +15,13 @@ export class PlagiarismDetectionError extends Error {
   }
 }
 
-/**
- * Runs plagiarism detection using the configured strategy:
- * - auto (default): Google first, Copyleaks fallback
- * - google: Google only
- * - copyleaks: Copyleaks only (for production launch)
- */
-async function runDetection(
-  request: PlagiarismRequest,
-): Promise<PlagiarismResult> {
-  if (env.PLAGIARISM_PROVIDER === "google") {
-    return getSingleProvider("google").check(request);
-  }
-
-  if (env.PLAGIARISM_PROVIDER === "copyleaks") {
-    return getSingleProvider("copyleaks").check(request);
-  }
-
-  return detectWithProviderFallback(request);
-}
-
-/** Validates input and delegates plagiarism detection to the active provider chain. */
+/** Validates input and runs plagiarism detection via Copyleaks. */
 export async function detectPlagiarism(
   request: PlagiarismRequest,
 ): Promise<PlagiarismResult> {
   try {
     validatePlagiarismText(request.text);
-    return await runDetection(request);
+    return await copyleaksProvider.check(request);
   } catch (error) {
     if (error instanceof PlagiarismDetectionError) {
       throw error;
