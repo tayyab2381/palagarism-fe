@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CheckerForm } from "@/components/dashboard/CheckerForm";
+import { logout } from "@/lib/auth-client";
 import { HistoryDrawer } from "@/components/dashboard/HistoryDrawer";
 import { ResultDisplay } from "@/components/dashboard/ResultDisplay";
 import { SessionSidebar } from "@/components/dashboard/SessionSidebar";
@@ -17,9 +19,11 @@ const MAX_WORDS = 5_000;
 
 /** Main plagiarism checker dashboard with sidebar history and result view. */
 export function CheckerDashboard() {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const history = usePlagiarismStore((state) => state.history);
   const currentResult = usePlagiarismStore((state) => state.currentResult);
@@ -65,6 +69,21 @@ export function CheckerDashboard() {
     }
   }
 
+  async function handleLogout() {
+    setIsLoggingOut(true);
+
+    try {
+      await logout();
+      clearAll();
+      router.push("/");
+      router.refresh();
+    } catch {
+      setError("Failed to log out. Please try again.");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-mist">
       <header className="border-b border-pebble bg-mist">
@@ -72,7 +91,19 @@ export function CheckerDashboard() {
           <Link href="/" className="text-lg font-semibold text-obsidian">
             PlagiarCheck
           </Link>
-          <p className="text-sm font-normal text-steel">Dashboard</p>
+          <div className="flex items-center gap-4">
+            <span className="hidden text-sm font-normal text-steel sm:inline">
+              Dashboard
+            </span>
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="text-sm text-steel underline hover:text-ink disabled:opacity-60"
+            >
+              {isLoggingOut ? "Logging out…" : "Log out"}
+            </button>
+          </div>
         </div>
       </header>
 

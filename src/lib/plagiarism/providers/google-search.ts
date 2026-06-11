@@ -1,3 +1,4 @@
+import * as cheerio from "cheerio";
 import { WordTokenizer } from "natural/lib/natural/tokenizers";
 import { env } from "@/config/env";
 import type {
@@ -59,14 +60,13 @@ function jaccardSimilarity(left: string, right: string): number {
   return union === 0 ? 0 : intersection / union;
 }
 
-/** Strips HTML tags and collapses whitespace from fetched page content. */
-function stripHtml(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+/** Extracts plain text from HTML using cheerio for similarity comparison. */
+function extractTextFromHtml(html: string): string {
+  const $ = cheerio.load(html);
+  $("script, style, noscript").remove();
+  const bodyText = $("body").text();
+  const fallbackText = bodyText.length > 0 ? bodyText : $.root().text();
+  return fallbackText.replace(/\s+/g, " ").trim();
 }
 
 /** Fetches a URL and returns plain text content for similarity comparison. */
@@ -87,7 +87,7 @@ async function fetchPageText(url: string): Promise<string> {
     }
 
     const html = await response.text();
-    return stripHtml(html).slice(0, MAX_PAGE_CHARS);
+    return extractTextFromHtml(html).slice(0, MAX_PAGE_CHARS);
   } catch {
     return "";
   } finally {
@@ -117,7 +117,7 @@ async function searchGoogle(query: string): Promise<GoogleSearchItem[]> {
   return data.items ?? [];
 }
 
-/** Google Custom Search + Jaccard similarity fallback provider. */
+/** Primary provider — Google Custom Search + Jaccard similarity scoring. */
 export class GoogleSearchProvider implements PlagiarismProvider {
   /** Searches the web for similar content and scores matches with Jaccard similarity. */
   async check(request: PlagiarismRequest): Promise<PlagiarismResult> {

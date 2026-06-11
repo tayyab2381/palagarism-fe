@@ -1,14 +1,10 @@
+import Cookies from "js-cookie";
 import type { PlagiarismResult } from "@/lib/plagiarism/types";
 import type { ApiResponse } from "@/types";
 
-/** Attempts to read auth_token from document.cookie (non-httpOnly fallback). */
+/** Attempts to read auth_token from cookies (non-httpOnly fallback only). */
 export function getAuthTokenFromCookie(): string | null {
-  if (typeof document === "undefined") {
-    return null;
-  }
-
-  const match = document.cookie.match(/(?:^|;\s*)auth_token=([^;]+)/);
-  return match ? decodeURIComponent(match[1]) : null;
+  return Cookies.get("auth_token") ?? null;
 }
 
 /** Runs a plagiarism check against the protected API. */

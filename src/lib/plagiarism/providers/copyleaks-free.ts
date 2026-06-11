@@ -87,7 +87,7 @@ async function submitCopyleaksScan(
       base64: base64Content,
       filename,
       properties: {
-        sandbox: true,
+        sandbox: env.COPYLEAKS_SANDBOX,
         webhooks: {
           status: `${webhookBase}/{STATUS}?scanId=${scanId}`,
         },
@@ -142,7 +142,7 @@ function mapCopyleaksPayload(
   return buildPlagiarismResult(matches, wordCount, overallScore);
 }
 
-/** Copyleaks free-tier provider using async sandbox scans + webhook polling. */
+/** Secondary provider — Copyleaks API with async webhook polling (fallback / production). */
 export class CopyleaksFreeProvider implements PlagiarismProvider {
   /** Runs a Copyleaks plagiarism scan and waits for webhook completion. */
   async check(request: PlagiarismRequest): Promise<PlagiarismResult> {

@@ -34,3 +34,17 @@ export async function authenticate(
 
   return (await response.json()) as ApiResponse<AuthSuccessData>;
 }
+
+/** Clears the httpOnly auth_token cookie via the logout API route. */
+export async function logout(): Promise<void> {
+  const response = await fetch("/api/auth/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+
+  const data = (await response.json()) as ApiResponse;
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.error ?? "Failed to log out");
+  }
+}
