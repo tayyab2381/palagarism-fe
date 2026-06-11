@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { hashPassword, signToken } from "@/lib/auth";
 import { createDevAuthResponse } from "@/lib/dev-auth";
 import { isDevBypassEnabled } from "@/lib/dev-bypass";
+import { handleDatabaseError } from "@/lib/db-errors";
 import { query } from "@/lib/db";
 import type {
   ApiResponse,
@@ -99,10 +100,8 @@ export async function POST(
         user: { id: user.id, email: user.email },
       },
     });
-  } catch {
-    return NextResponse.json(
-      { success: false, error: "Internal server error" },
-      { status: 500 },
-    );
+  } catch (error) {
+    const { status, message } = handleDatabaseError("auth/signup", error);
+    return NextResponse.json({ success: false, error: message }, { status });
   }
 }
