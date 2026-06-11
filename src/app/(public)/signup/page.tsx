@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { Lock, Mail } from "lucide-react";
 import { AuthField } from "@/components/auth/AuthField";
 import { AuthSubmitButton } from "@/components/auth/AuthSubmitButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthLayout } from "@/components/layout/AuthLayout";
+import { Card } from "@/components/ui/Card";
 import { FormError } from "@/components/ui/FormError";
-import { PrimaryCard } from "@/components/ui/PrimaryCard";
 import {
   authenticate,
   isValidEmail,
@@ -93,78 +94,79 @@ export default function SignupPage() {
   return (
     <AuthLayout>
       <ErrorBoundary fallbackTitle="Sign up unavailable">
-      <PrimaryCard className="p-10">
-        <h1 className="text-heading font-bold text-obsidian">
-          Create your account
-        </h1>
-        <p className="mt-2 text-body font-normal text-steel">
-          Free plagiarism checks. No credit card. No document storage.
-        </p>
+        <Card variant="glass" className="p-8 shadow-glow md:p-10">
+          <h1 className="text-3xl font-bold text-slate-900">
+            Create your account
+          </h1>
+          <p className="mt-2 text-slate-500">
+            Free plagiarism checks. No credit card required.
+          </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
-          <AuthField
-            id="email"
-            label="Email"
-            type="email"
-            name="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            error={errors.email}
-          />
-
-          <div>
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
             <AuthField
-              id="password"
-              label="Password"
-              type="password"
-              name="password"
-              autoComplete="new-password"
-              placeholder="At least 8 characters"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              error={errors.password}
+              id="email"
+              label="Email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              error={errors.email}
+              icon={<Mail className="h-4 w-4" />}
             />
-            <p className="mt-1 text-caption font-normal text-steel">
-              Use at least 8 characters with a mix of letters and numbers.
-            </p>
-          </div>
 
-          <AuthField
-            id="confirmPassword"
-            label="Confirm password"
-            type="password"
-            name="confirmPassword"
-            autoComplete="new-password"
-            placeholder="Repeat your password"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            error={errors.confirmPassword}
-          />
+            <div>
+              <AuthField
+                id="password"
+                label="Password"
+                type="password"
+                name="password"
+                autoComplete="new-password"
+                placeholder="At least 8 characters"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                error={errors.password}
+                icon={<Lock className="h-4 w-4" />}
+              />
+              <p className="mt-1.5 text-xs text-slate-500">
+                Use at least 8 characters with letters and numbers.
+              </p>
+            </div>
 
-          {errors.form ? <FormError>{errors.form}</FormError> : null}
+            <AuthField
+              id="confirmPassword"
+              label="Confirm password"
+              type="password"
+              name="confirmPassword"
+              autoComplete="new-password"
+              placeholder="Repeat your password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              error={errors.confirmPassword}
+              icon={<Lock className="h-4 w-4" />}
+            />
 
-          <AuthSubmitButton
-            isLoading={isLoading}
-            loadingText="Creating account..."
-          >
-            Create Account
-          </AuthSubmitButton>
-        </form>
+            {errors.form ? <FormError>{errors.form}</FormError> : null}
 
-        <div className="mt-6 border-t border-pebble pt-6">
-          <p className="text-center text-body font-normal text-steel">
+            <AuthSubmitButton
+              isLoading={isLoading}
+              loadingText="Creating account..."
+            >
+              Create account
+            </AuthSubmitButton>
+          </form>
+
+          <div className="mt-6 border-t border-slate-200 pt-6 text-center text-sm text-slate-500">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-medium text-ink underline hover:opacity-80"
+              className="font-semibold text-brand-600 hover:text-brand-700"
             >
               Sign in
             </Link>
-          </p>
-        </div>
-      </PrimaryCard>
+          </div>
+        </Card>
       </ErrorBoundary>
     </AuthLayout>
   );

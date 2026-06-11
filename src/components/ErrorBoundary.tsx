@@ -1,8 +1,8 @@
 "use client";
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
-import { PrimaryCard } from "@/components/ui/PrimaryCard";
-import { PrimaryCtaButton } from "@/components/ui/PrimaryCtaButton";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -39,22 +39,18 @@ export class ErrorBoundary extends Component<
   render(): ReactNode {
     if (this.state.hasError) {
       return (
-        <PrimaryCard className="text-center">
-          <h2 className="text-heading-sm font-semibold text-obsidian">
+        <Card variant="elevated" className="text-center">
+          <h2 className="text-lg font-semibold text-slate-900">
             {this.props.fallbackTitle ?? "Something went wrong"}
           </h2>
-          <p className="mx-auto mt-2 max-w-md text-body font-normal text-steel">
+          <p className="mx-auto mt-2 max-w-md text-sm text-slate-500">
             {this.props.fallbackDescription ??
               "This section failed to load. Please try again."}
           </p>
-          <PrimaryCtaButton
-            type="button"
-            onClick={this.handleReset}
-            className="mt-6"
-          >
+          <Button type="button" onClick={this.handleReset} className="mt-6">
             Try again
-          </PrimaryCtaButton>
-        </PrimaryCard>
+          </Button>
+        </Card>
       );
     }
 

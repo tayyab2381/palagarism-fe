@@ -1,51 +1,56 @@
+import { getScoreGradient, getScoreTone } from "@/lib/score-utils";
 import { SimilarityScoreBadge } from "@/components/ui/SimilarityScoreBadge";
-import { getScoreTone } from "@/lib/score-utils";
 
 interface ScoreCircleProps {
   score: number;
 }
 
-/** Large circular similarity score with neutral obsidian ring. */
+/** Gradient SVG score ring with glow. */
 export function ScoreCircle({ score }: ScoreCircleProps) {
   const boundedScore = Math.min(100, Math.max(0, Math.round(score)));
   const tone = getScoreTone(boundedScore);
-  const radius = 42;
+  const strokeColor = getScoreGradient(boundedScore);
+  const radius = 52;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset =
     circumference - (boundedScore / 100) * circumference;
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative h-24 w-24">
-        <svg className="h-24 w-24 -rotate-90" viewBox="0 0 96 96">
-          <circle
-            cx="48"
-            cy="48"
-            r={radius}
-            fill="none"
-            stroke="#ececee"
-            strokeWidth="8"
-          />
-          <circle
-            cx="48"
-            cy="48"
-            r={radius}
-            fill="none"
-            stroke="#09090b"
-            strokeWidth="8"
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-heading font-bold text-obsidian">
-            {boundedScore}%
-          </span>
+      <div className="relative">
+        <div className="absolute inset-0 rounded-full bg-brand-500/10 blur-xl" />
+        <div className="relative h-32 w-32">
+          <svg className="h-32 w-32 -rotate-90" viewBox="0 0 128 128">
+            <circle
+              cx="64"
+              cy="64"
+              r={radius}
+              fill="none"
+              stroke="#E2E8F0"
+              strokeWidth="10"
+            />
+            <circle
+              cx="64"
+              cy="64"
+              r={radius}
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth="10"
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-3xl font-bold text-slate-900">
+              {boundedScore}%
+            </span>
+            <span className="text-xs text-slate-500">similarity</span>
+          </div>
         </div>
       </div>
-      <SimilarityScoreBadge score={boundedScore} className="mt-3" />
-      <p className="mt-2 text-body font-semibold text-ink">{tone.label}</p>
+      <SimilarityScoreBadge score={boundedScore} className="mt-4" />
+      <p className="mt-2 text-sm font-semibold text-slate-700">{tone.label}</p>
     </div>
   );
 }

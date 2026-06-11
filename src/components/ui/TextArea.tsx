@@ -4,11 +4,11 @@ interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   className?: string;
 }
 
-/** Multi-line text field using the same input surface recipe. */
+/** Styled textarea with brand focus ring. */
 export function TextArea({ className = "", ...props }: TextAreaProps) {
   return (
     <textarea
-      className={`bg-snow border-transparent rounded-input px-4 py-3 text-sm font-normal text-ink placeholder:text-ash focus:outline-none focus:ring-1 focus:ring-pebble w-full resize-none ${className}`.trim()}
+      className={`w-full resize-y rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 ${className}`.trim()}
       {...props}
     />
   );

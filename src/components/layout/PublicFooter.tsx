@@ -1,33 +1,41 @@
 import Link from "next/link";
+import { ShieldCheck } from "lucide-react";
 
 const productLinks = [
-  { href: "/#how-it-works", label: "How It Works" },
-  { href: "/signup", label: "Get Started" },
-  { href: "/login", label: "Sign In" },
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/#features", label: "Features" },
+  { href: "/signup", label: "Get started" },
+  { href: "/login", label: "Sign in" },
 ] as const;
 
-/** Multi-column public footer. */
+/** Dark slate footer with gradient top border. */
 export function PublicFooter() {
   return (
-    <footer className="border-t border-pebble bg-mist py-12">
-      <div className="mx-auto max-w-page px-6">
-        <div className="grid gap-10 md:grid-cols-3">
-          <div>
-            <p className="text-lg font-semibold text-obsidian">PlagiarCheck</p>
-            <p className="mt-3 max-w-xs text-body font-normal text-steel">
-              Free plagiarism detection for students, researchers, and writers.
-              No limits. No storage. No cost — ever.
+    <footer className="relative mt-section border-t border-slate-800 bg-slate-900 text-slate-300">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-brand opacity-60" />
+      <div className="mx-auto max-w-page px-6 py-14">
+        <div className="grid gap-10 md:grid-cols-4">
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-brand">
+                <ShieldCheck className="h-5 w-5 text-white" />
+              </div>
+              <span className="text-lg font-bold text-white">PlagiarCheck</span>
+            </div>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
+              Professional plagiarism detection for students and researchers.
+              Free, private, and instant.
             </p>
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-ink">Product</p>
-            <ul className="mt-4 space-y-2">
+            <p className="text-sm font-semibold text-white">Product</p>
+            <ul className="mt-4 space-y-2.5">
               {productLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-body font-normal text-steel hover:opacity-80"
+                    className="text-sm text-slate-400 transition-colors hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -37,25 +45,30 @@ export function PublicFooter() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-ink">Legal</p>
-            <ul className="mt-4 space-y-2">
+            <p className="text-sm font-semibold text-white">Legal</p>
+            <ul className="mt-4 space-y-2.5">
               <li>
-                <span className="text-body font-normal text-steel">
-                  Privacy Policy
-                </span>
+                <Link
+                  href="/#privacy"
+                  className="text-sm text-slate-400 transition-colors hover:text-white"
+                >
+                  Privacy
+                </Link>
               </li>
               <li>
-                <span className="text-body font-normal text-steel">
-                  Terms of Service
-                </span>
+                <Link
+                  href="/#features"
+                  className="text-sm text-slate-400 transition-colors hover:text-white"
+                >
+                  Terms
+                </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        <p className="mt-10 border-t border-pebble pt-8 text-body font-normal text-steel">
-          PlagiarCheck © {new Date().getFullYear()} · Built for students in
-          Pakistan and beyond
+        <p className="mt-12 border-t border-slate-800 pt-8 text-sm text-slate-500">
+          © {new Date().getFullYear()} PlagiarCheck. Built for students worldwide.
         </p>
       </div>
     </footer>

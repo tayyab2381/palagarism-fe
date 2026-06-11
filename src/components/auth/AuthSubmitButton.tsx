@@ -1,35 +1,21 @@
-import { PrimaryCtaButton } from "@/components/ui/PrimaryCtaButton";
+import { Button } from "@/components/ui/Button";
+import type { ReactNode } from "react";
 
 interface AuthSubmitButtonProps {
-  isLoading: boolean;
-  loadingText: string;
-  children: string;
+  children: ReactNode;
+  isLoading?: boolean;
+  loadingText?: string;
 }
 
-/** Full-width primary CTA with obsidian loading spinner state. */
+/** Full-width gradient submit button for auth forms. */
 export function AuthSubmitButton({
-  isLoading,
-  loadingText,
   children,
+  isLoading = false,
+  loadingText = "Loading...",
 }: AuthSubmitButtonProps) {
   return (
-    <PrimaryCtaButton
-      type="submit"
-      className="mt-6 w-full"
-      disabled={isLoading}
-      aria-busy={isLoading}
-    >
-      {isLoading ? (
-        <span className="inline-flex items-center">
-          <span
-            className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"
-            aria-hidden="true"
-          />
-          {loadingText}
-        </span>
-      ) : (
-        children
-      )}
-    </PrimaryCtaButton>
+    <Button type="submit" disabled={isLoading} className="mt-2 w-full">
+      {isLoading ? loadingText : children}
+    </Button>
   );
 }

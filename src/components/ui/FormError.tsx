@@ -1,3 +1,4 @@
+import { AlertCircle } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface FormErrorProps {
@@ -5,14 +6,15 @@ interface FormErrorProps {
   className?: string;
 }
 
-/** Neutral form-level error — achromatic, no red text. */
+/** Rose-tinted form error with icon. */
 export function FormError({ children, className = "" }: FormErrorProps) {
   return (
     <div
-      className={`rounded-card-sm border-l-2 border-graphite bg-fog px-4 py-3 ${className}`.trim()}
+      className={`flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 ${className}`.trim()}
       role="alert"
     >
-      <p className="text-sm font-medium text-obsidian">{children}</p>
+      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-accent-rose" />
+      <p className="text-sm font-medium text-rose-800">{children}</p>
     </div>
   );
 }

@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { Lock, Mail } from "lucide-react";
 import { AuthField } from "@/components/auth/AuthField";
 import { AuthSubmitButton } from "@/components/auth/AuthSubmitButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthLayout } from "@/components/layout/AuthLayout";
+import { Card } from "@/components/ui/Card";
 import { FormError } from "@/components/ui/FormError";
-import { PrimaryCard } from "@/components/ui/PrimaryCard";
 import {
   authenticate,
   isValidEmail,
@@ -83,56 +84,56 @@ export default function LoginPage() {
   return (
     <AuthLayout>
       <ErrorBoundary fallbackTitle="Sign in unavailable">
-      <PrimaryCard className="p-10">
-        <h1 className="text-heading font-bold text-obsidian">Welcome back</h1>
-        <p className="mt-2 text-body font-normal text-steel">
-          Sign in to run plagiarism checks on your documents.
-        </p>
+        <Card variant="glass" className="p-8 shadow-glow md:p-10">
+          <h1 className="text-3xl font-bold text-slate-900">Welcome back</h1>
+          <p className="mt-2 text-slate-500">
+            Sign in to run plagiarism checks on your documents.
+          </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
-          <AuthField
-            id="email"
-            label="Email"
-            type="email"
-            name="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            error={errors.email}
-          />
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
+            <AuthField
+              id="email"
+              label="Email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              error={errors.email}
+              icon={<Mail className="h-4 w-4" />}
+            />
 
-          <AuthField
-            id="password"
-            label="Password"
-            type="password"
-            name="password"
-            autoComplete="current-password"
-            placeholder="Your password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            error={errors.password}
-          />
+            <AuthField
+              id="password"
+              label="Password"
+              type="password"
+              name="password"
+              autoComplete="current-password"
+              placeholder="Your password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              error={errors.password}
+              icon={<Lock className="h-4 w-4" />}
+            />
 
-          {errors.form ? <FormError>{errors.form}</FormError> : null}
+            {errors.form ? <FormError>{errors.form}</FormError> : null}
 
-          <AuthSubmitButton isLoading={isLoading} loadingText="Signing in...">
-            Sign In
-          </AuthSubmitButton>
-        </form>
+            <AuthSubmitButton isLoading={isLoading} loadingText="Signing in...">
+              Sign in
+            </AuthSubmitButton>
+          </form>
 
-        <div className="mt-6 border-t border-pebble pt-6">
-          <p className="text-center text-body font-normal text-steel">
+          <div className="mt-6 border-t border-slate-200 pt-6 text-center text-sm text-slate-500">
             Don&apos;t have an account?{" "}
             <Link
               href="/signup"
-              className="font-medium text-ink underline hover:opacity-80"
+              className="font-semibold text-brand-600 hover:text-brand-700"
             >
-              Sign up
+              Create one free
             </Link>
-          </p>
-        </div>
-      </PrimaryCard>
+          </div>
+        </Card>
       </ErrorBoundary>
     </AuthLayout>
   );

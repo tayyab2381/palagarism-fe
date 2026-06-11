@@ -1,47 +1,57 @@
-import { DarkPanel } from "@/components/ui/DarkPanel";
+import { EyeOff, Lock, Shield, Zap } from "lucide-react";
+import { FeaturePanel } from "@/components/ui/FeaturePanel";
+import { SectionHeading } from "@/components/ui/StatBlock";
 
 const features = [
   {
-    leadIn: "100%",
-    keyPhrase: "Free Forever",
-    description:
-      "No subscriptions, no hidden fees, no credit card. Plagiarism checking should be accessible to everyone.",
+    icon: Shield,
+    title: "Always free",
+    description: "No subscriptions, trials, or hidden fees. Check as often as you need.",
   },
   {
-    leadIn: "Zero",
-    keyPhrase: "Data Storage",
-    description:
-      "Your documents never touch our database. Results live in memory only and vanish when you close the tab.",
+    icon: Lock,
+    title: "Zero storage",
+    description: "Documents never touch our database. Results exist only in your browser session.",
   },
   {
-    leadIn: "Instant",
-    keyPhrase: "Results",
-    description:
-      "Paste, check, and review in seconds. Built for students rushing deadlines and researchers under pressure.",
+    icon: Zap,
+    title: "Instant results",
+    description: "Paste, scan, and review in seconds — built for deadline pressure.",
+  },
+  {
+    icon: EyeOff,
+    title: "Private by design",
+    description: "Close the tab and your data is gone. No logs, no retention.",
   },
 ] as const;
 
-/** Dark contrast panel for value propositions. */
+/** 2x2 feature grid on dark gradient panel. */
 export function FeaturesPanel() {
   return (
-    <section className="pb-section">
-      <DarkPanel className="p-10">
-        <div className="grid gap-10 md:grid-cols-3">
+    <section className="pb-section" id="features">
+      <SectionHeading
+        title="Built for trust and speed"
+        subtitle="Everything you need for honest plagiarism detection — without compromising your privacy."
+        className="mb-10"
+      />
+
+      <FeaturePanel>
+        <div className="grid gap-8 sm:grid-cols-2">
           {features.map((feature) => (
-            <div key={feature.keyPhrase}>
-              <p className="text-subheading leading-snug">
-                <span className="font-light text-ash">{feature.leadIn}</span>{" "}
-                <span className="font-semibold text-snow">
-                  {feature.keyPhrase}
-                </span>
-              </p>
-              <p className="mt-3 text-body font-normal text-steel/70">
-                {feature.description}
-              </p>
+            <div key={feature.title} className="flex gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                <feature.icon className="h-6 w-6 text-brand-200" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">{feature.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-300">
+                  {feature.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>
-      </DarkPanel>
+      </FeaturePanel>
     </section>
   );
 }

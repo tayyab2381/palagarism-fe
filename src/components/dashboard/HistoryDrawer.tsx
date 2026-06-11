@@ -1,8 +1,8 @@
 "use client";
 
 import { SimilarityScoreBadge } from "@/components/ui/SimilarityScoreBadge";
-import { SecondaryButton } from "@/components/ui/SecondaryButton";
-import { SecondaryCard } from "@/components/ui/SecondaryCard";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { formatCheckedAt } from "@/lib/score-utils";
 import type { CheckHistory } from "@/store/plagiarismStore";
 
@@ -15,7 +15,7 @@ interface HistoryDrawerProps {
   onClearAll: () => void;
 }
 
-/** Mobile drawer for session history. */
+/** Mobile bottom drawer for session history. */
 export function HistoryDrawer({
   isOpen,
   history,
@@ -32,19 +32,20 @@ export function HistoryDrawer({
     <div className="fixed inset-0 z-50 lg:hidden">
       <button
         type="button"
-        className="absolute inset-0 bg-obsidian/40"
+        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
         aria-label="Close history"
         onClick={onClose}
       />
 
-      <SecondaryCard className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto rounded-b-none p-4">
+      <Card
+        variant="elevated"
+        className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto rounded-b-none p-5"
+      >
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-caption font-medium uppercase text-steel">
-            This Session
-          </p>
-          <SecondaryButton type="button" onClick={onClose} className="px-3 py-2">
+          <p className="text-sm font-semibold text-slate-900">Session history</p>
+          <Button type="button" variant="ghost" onClick={onClose} className="px-3 py-2">
             Close
-          </SecondaryButton>
+          </Button>
         </div>
 
         <div className="space-y-2">
@@ -56,15 +57,17 @@ export function HistoryDrawer({
                 onSelect(entry.id);
                 onClose();
               }}
-              className={`w-full rounded-card-sm p-3 text-left transition-opacity hover:opacity-90 ${
-                entry.id === currentId ? "bg-snow shadow-card-inset" : "bg-fog"
+              className={`w-full rounded-xl border p-3 text-left transition-colors ${
+                entry.id === currentId
+                  ? "border-brand-200 bg-brand-50/50"
+                  : "border-slate-100 bg-slate-50"
               }`}
             >
               <div className="flex items-start justify-between gap-2">
-                <p className="text-body font-medium text-ink">{entry.title}</p>
+                <p className="text-sm font-medium text-slate-800">{entry.title}</p>
                 <SimilarityScoreBadge score={entry.result.overallScore} />
               </div>
-              <p className="mt-2 text-caption font-normal text-steel">
+              <p className="mt-1 text-xs text-slate-500">
                 {formatCheckedAt(entry.checkedAt)}
               </p>
             </button>
@@ -72,18 +75,19 @@ export function HistoryDrawer({
         </div>
 
         {history.length > 0 ? (
-          <SecondaryButton
+          <Button
             type="button"
+            variant="secondary"
             onClick={() => {
               onClearAll();
               onClose();
             }}
             className="mt-4 w-full"
           >
-            Clear All History
-          </SecondaryButton>
+            Clear all history
+          </Button>
         ) : null}
-      </SecondaryCard>
+      </Card>
     </div>
   );
 }

@@ -4,11 +4,11 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
 }
 
-/** White input field with pebble focus ring — no chromatic focus state. */
+/** Styled text input with brand focus ring. */
 export function TextInput({ className = "", ...props }: TextInputProps) {
   return (
     <input
-      className={`bg-snow border-transparent rounded-input px-4 py-3 text-sm font-normal text-ink placeholder:text-ash focus:outline-none focus:ring-1 focus:ring-pebble w-full ${className}`.trim()}
+      className={`w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 ${className}`.trim()}
       {...props}
     />
   );
