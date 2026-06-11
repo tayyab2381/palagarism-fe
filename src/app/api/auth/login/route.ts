@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { signToken, verifyPassword } from "@/lib/auth";
+import { createDevAuthResponse } from "@/lib/dev-auth";
+import { isDevBypassEnabled } from "@/lib/dev-bypass";
 import { query } from "@/lib/db";
 import type {
   ApiResponse,
@@ -44,6 +46,11 @@ export async function POST(
     }
 
     const { email, password } = parsed.credentials;
+
+    if (isDevBypassEnabled()) {
+      const data = await createDevAuthResponse(email);
+      return NextResponse.json({ success: true, data });
+    }
 
     const result = await query<Pick<UserRow, "id" | "email" | "password_hash">>(
       "SELECT id, email, password_hash FROM users WHERE email = $1",

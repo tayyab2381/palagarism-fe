@@ -1,3 +1,4 @@
+import { isDevBypassEnabled } from "@/lib/dev-bypass";
 import {
   isCopyleaksConfigured,
   isGoogleConfigured,
@@ -8,6 +9,8 @@ export type PlagiarismProviderMode = "auto" | "google" | "copyleaks";
 export interface Env {
   DATABASE_URL: string;
   JWT_SECRET: string;
+  APP_ENV: string;
+  IS_DEV_BYPASS: boolean;
   PLAGIARISM_PROVIDER: PlagiarismProviderMode;
   PLAGIARISM_API_KEY: string;
   PLAGIARISM_API_EMAIL: string;
@@ -96,9 +99,13 @@ function validateEnv(): Env {
     copyleaksEmail: process.env.PLAGIARISM_API_EMAIL?.trim() ?? "",
   };
 
+  const isDevBypass = isDevBypassEnabled();
+
   const envCandidate: Env = {
     DATABASE_URL: process.env.DATABASE_URL!,
     JWT_SECRET: process.env.JWT_SECRET!,
+    APP_ENV: process.env.APP_ENV?.trim() ?? "",
+    IS_DEV_BYPASS: isDevBypass,
     PLAGIARISM_PROVIDER: provider,
     PLAGIARISM_API_KEY: credentials.copyleaksApiKey,
     PLAGIARISM_API_EMAIL: credentials.copyleaksEmail,
@@ -108,25 +115,33 @@ function validateEnv(): Env {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL!,
   };
 
-  if (provider === "google" && !isGoogleConfigured(credentials)) {
-    throw new Error(
-      "PLAGIARISM_PROVIDER=google requires GOOGLE_CUSTOM_SEARCH_API_KEY and GOOGLE_CUSTOM_SEARCH_ENGINE_ID.",
-    );
+  if (!isDevBypass) {
+    if (provider === "google" && !isGoogleConfigured(credentials)) {
+      throw new Error(
+        "PLAGIARISM_PROVIDER=google requires GOOGLE_CUSTOM_SEARCH_API_KEY and GOOGLE_CUSTOM_SEARCH_ENGINE_ID.",
+      );
+    }
+
+    if (provider === "copyleaks" && !isCopyleaksConfigured(credentials)) {
+      throw new Error(
+        "PLAGIARISM_PROVIDER=copyleaks requires PLAGIARISM_API_KEY and PLAGIARISM_API_EMAIL.",
+      );
+    }
+
+    if (
+      provider === "auto" &&
+      !isGoogleConfigured(credentials) &&
+      !isCopyleaksConfigured(credentials)
+    ) {
+      throw new Error(
+        "PLAGIARISM_PROVIDER=auto requires at least one provider configured (Google Custom Search or Copyleaks credentials).",
+      );
+    }
   }
 
-  if (provider === "copyleaks" && !isCopyleaksConfigured(credentials)) {
-    throw new Error(
-      "PLAGIARISM_PROVIDER=copyleaks requires PLAGIARISM_API_KEY and PLAGIARISM_API_EMAIL.",
-    );
-  }
-
-  if (
-    provider === "auto" &&
-    !isGoogleConfigured(credentials) &&
-    !isCopyleaksConfigured(credentials)
-  ) {
-    throw new Error(
-      "PLAGIARISM_PROVIDER=auto requires at least one provider configured (Google Custom Search or Copyleaks credentials).",
+  if (isDevBypass) {
+    console.warn(
+      "[PlagiarCheck] APP_ENV=development — auth, rate limits, and provider env checks are bypassed.",
     );
   }
 

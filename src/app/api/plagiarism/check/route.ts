@@ -1,6 +1,6 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth-jwt";
+import { resolveRequestUser } from "@/lib/auth-request";
+import { isDevBypassEnabled } from "@/lib/dev-bypass";
 import {
   detectPlagiarism,
   PlagiarismDetectionError,
@@ -20,31 +20,12 @@ interface RateLimitEntry {
 
 const rateLimitStore = new Map<string, RateLimitEntry>();
 
-/** Extracts bearer token from the Authorization header. */
-function extractBearerToken(request: Request): string | null {
-  const authorization = request.headers.get("authorization");
-
-  if (!authorization?.startsWith("Bearer ")) {
-    return null;
-  }
-
-  return authorization.slice(7).trim();
-}
-
-/** Reads JWT from Authorization header or httpOnly auth_token cookie. */
-async function extractAuthToken(request: Request): Promise<string | null> {
-  const bearerToken = extractBearerToken(request);
-
-  if (bearerToken) {
-    return bearerToken;
-  }
-
-  const cookieStore = await cookies();
-  return cookieStore.get("auth_token")?.value ?? null;
-}
-
 /** Enforces per-user hourly request limits using an in-memory store. */
 function checkRateLimit(userId: string): boolean {
+  if (isDevBypassEnabled()) {
+    return true;
+  }
+
   const now = Date.now();
   const entry = rateLimitStore.get(userId);
 
@@ -95,25 +76,16 @@ function parseRequestBody(
 export async function POST(
   request: Request,
 ): Promise<NextResponse<ApiResponse<PlagiarismResult>>> {
-  const token = await extractAuthToken(request);
+  const user = await resolveRequestUser(request);
 
-  if (!token) {
+  if (!user) {
     return NextResponse.json(
       { success: false, error: "Unauthorized" },
       { status: 401 },
     );
   }
 
-  const payload = await verifyToken(token);
-
-  if (!payload) {
-    return NextResponse.json(
-      { success: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
-
-  if (!checkRateLimit(payload.userId)) {
+  if (!checkRateLimit(user.userId)) {
     return NextResponse.json(
       {
         success: false,
