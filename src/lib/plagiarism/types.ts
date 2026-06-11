@@ -1,0 +1,1 @@
+// PlagiarismResult, ProviderResponse interfaces
