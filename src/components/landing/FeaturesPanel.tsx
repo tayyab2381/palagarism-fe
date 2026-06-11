@@ -5,47 +5,44 @@ import { SectionHeading } from "@/components/ui/StatBlock";
 const features = [
   {
     icon: Shield,
-    title: "Always free",
-    description: "No subscriptions, trials, or hidden fees. Check as often as you need.",
+    title: "Free to use",
+    description: "No trial that expires. No card on file.",
   },
   {
     icon: Lock,
-    title: "Zero storage",
-    description: "Documents never touch our database. Results exist only in your browser session.",
+    title: "Nothing stored",
+    description: "Text is processed for the check, then discarded from our side.",
   },
   {
     icon: Zap,
-    title: "Instant results",
-    description: "Paste, scan, and review in seconds — built for deadline pressure.",
+    title: "Fast turnaround",
+    description: "Most checks finish in under half a minute.",
   },
   {
     icon: EyeOff,
-    title: "Private by design",
-    description: "Close the tab and your data is gone. No logs, no retention.",
+    title: "Session-only history",
+    description: "Refresh the page and your session list clears.",
   },
 ] as const;
 
-/** 2x2 feature grid on dark gradient panel. */
 export function FeaturesPanel() {
   return (
     <section className="pb-section" id="features">
       <SectionHeading
-        title="Built for trust and speed"
-        subtitle="Everything you need for honest plagiarism detection — without compromising your privacy."
-        className="mb-10"
+        title="Straightforward by design"
+        subtitle="We skipped the feature bloat. You get checks, reports, and privacy."
+        className="mb-8"
       />
 
       <FeaturePanel>
         <div className="grid gap-8 sm:grid-cols-2">
-          {features.map((feature) => (
-            <div key={feature.title} className="flex gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
-                <feature.icon className="h-6 w-6 text-brand-200" />
-              </div>
+          {features.map((f) => (
+            <div key={f.title} className="flex gap-3">
+              <f.icon className="mt-0.5 h-5 w-5 shrink-0 text-stone-400" strokeWidth={1.5} />
               <div>
-                <h3 className="font-semibold text-white">{feature.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-300">
-                  {feature.description}
+                <h3 className="font-medium text-white">{f.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-stone-400">
+                  {f.description}
                 </p>
               </div>
             </div>

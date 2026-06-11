@@ -5,7 +5,7 @@ interface FeaturePanelProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-/** Dark gradient panel for feature sections. */
+/** Warm charcoal panel — no purple gradient mesh. */
 export function FeaturePanel({
   children,
   className = "",
@@ -13,18 +13,10 @@ export function FeaturePanel({
 }: FeaturePanelProps) {
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-dark p-8 text-white md:p-10 ${className}`.trim()}
+      className={`rounded-xl bg-stone-900 px-8 py-10 text-stone-100 md:px-10 ${className}`.trim()}
       {...props}
     >
-      <div
-        className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-brand-500/20 blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-violet-500/20 blur-3xl"
-        aria-hidden
-      />
-      <div className="relative">{children}</div>
+      {children}
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
 
 const productLinks = [
   { href: "/#how-it-works", label: "How it works" },
@@ -8,34 +7,29 @@ const productLinks = [
   { href: "/login", label: "Sign in" },
 ] as const;
 
-/** Dark slate footer with gradient top border. */
 export function PublicFooter() {
   return (
-    <footer className="relative mt-section border-t border-slate-800 bg-slate-900 text-slate-300">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-brand opacity-60" />
-      <div className="mx-auto max-w-page px-6 py-14">
+    <footer className="mt-section border-t border-line bg-stone-100/50">
+      <div className="mx-auto max-w-page px-6 py-12">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-brand">
-                <ShieldCheck className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-lg font-bold text-white">PlagiarCheck</span>
-            </div>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
-              Professional plagiarism detection for students and researchers.
-              Free, private, and instant.
+            <p className="font-semibold text-ink">PlagiarCheck</p>
+            <p className="mt-2 max-w-xs text-sm leading-relaxed text-ink-subtle">
+              Plagiarism detection that stays out of your way. Free, private,
+              and built for real deadlines.
             </p>
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-white">Product</p>
-            <ul className="mt-4 space-y-2.5">
+            <p className="text-xs font-medium uppercase tracking-wider text-ink-subtle">
+              Product
+            </p>
+            <ul className="mt-3 space-y-2">
               {productLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 transition-colors hover:text-white"
+                    className="text-sm text-ink-muted hover:text-ink"
                   >
                     {link.label}
                   </Link>
@@ -45,21 +39,17 @@ export function PublicFooter() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-white">Legal</p>
-            <ul className="mt-4 space-y-2.5">
+            <p className="text-xs font-medium uppercase tracking-wider text-ink-subtle">
+              Legal
+            </p>
+            <ul className="mt-3 space-y-2">
               <li>
-                <Link
-                  href="/#privacy"
-                  className="text-sm text-slate-400 transition-colors hover:text-white"
-                >
+                <Link href="/#privacy" className="text-sm text-ink-muted hover:text-ink">
                   Privacy
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/#features"
-                  className="text-sm text-slate-400 transition-colors hover:text-white"
-                >
+                <Link href="/#features" className="text-sm text-ink-muted hover:text-ink">
                   Terms
                 </Link>
               </li>
@@ -67,8 +57,9 @@ export function PublicFooter() {
           </div>
         </div>
 
-        <p className="mt-12 border-t border-slate-800 pt-8 text-sm text-slate-500">
-          © {new Date().getFullYear()} PlagiarCheck. Built for students worldwide.
+        <div className="rule mt-10" />
+        <p className="mt-6 text-xs text-ink-subtle">
+          © {new Date().getFullYear()} PlagiarCheck
         </p>
       </div>
     </footer>

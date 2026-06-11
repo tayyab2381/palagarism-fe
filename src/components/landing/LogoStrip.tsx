@@ -1,30 +1,20 @@
-const logos = [
-  "Stanford",
-  "MIT",
-  "Oxford",
-  "Cambridge",
-  "LUMS",
-  "NUST",
-] as const;
+const logos = ["LUMS", "NUST", "IBA", "QAU", "COMSATS", "FAST"] as const;
 
-/** Education logo strip for social proof. */
 export function LogoStrip() {
   return (
-    <section className="border-y border-slate-200/60 bg-white/50 py-10">
-      <div className="mx-auto max-w-page px-6">
-        <p className="text-center text-sm font-medium text-slate-500">
-          Trusted by students at leading institutions
-        </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-          {logos.map((name) => (
-            <span
-              key={name}
-              className="text-sm font-bold tracking-wide text-slate-400"
-            >
-              {name}
-            </span>
-          ))}
-        </div>
+    <section className="border-y border-line py-8">
+      <p className="text-center text-xs uppercase tracking-widest text-ink-subtle">
+        Used by students at
+      </p>
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
+        {logos.map((name) => (
+          <span
+            key={name}
+            className="text-sm font-medium text-stone-400"
+          >
+            {name}
+          </span>
+        ))}
       </div>
     </section>
   );

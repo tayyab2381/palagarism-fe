@@ -12,13 +12,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-gradient-brand text-white shadow-glow hover:opacity-95 hover:shadow-glow-sm",
+    "bg-ink text-white hover:bg-stone-800 shadow-sm active:scale-[0.98]",
   secondary:
-    "border border-slate-200 bg-white text-slate-700 hover:border-brand-200 hover:bg-brand-50",
-  ghost: "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+    "border border-line bg-surface text-ink hover:border-stone-400 hover:bg-stone-50",
+  ghost: "text-ink-subtle hover:bg-stone-100 hover:text-ink",
 };
 
-/** Premium button with gradient primary variant. */
+/** Solid, editorial button — no gradients. */
 export function Button({
   children,
   variant = "primary",
@@ -28,7 +28,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const classes =
-    `inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${variantClasses[variant]} ${className}`.trim();
+    `inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-50 ${variantClasses[variant]} ${className}`.trim();
 
   if (href) {
     return (

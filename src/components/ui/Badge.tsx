@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
-type BadgeVariant = "brand" | "teal" | "amber" | "rose" | "neutral";
+type BadgeVariant = "default" | "teal" | "amber" | "rose" | "muted";
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   children: ReactNode;
@@ -9,23 +9,23 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  brand: "bg-brand-50 text-brand-700 border-brand-100",
-  teal: "bg-teal-50 text-teal-700 border-teal-100",
-  amber: "bg-amber-50 text-amber-700 border-amber-100",
-  rose: "bg-rose-50 text-rose-700 border-rose-100",
-  neutral: "bg-slate-100 text-slate-600 border-slate-200",
+  default: "bg-stone-100 text-ink-muted",
+  teal: "bg-accent-light text-accent-dark",
+  amber: "bg-amber-50 text-amber-800",
+  rose: "bg-rose-50 text-rose-800",
+  muted: "bg-stone-50 text-ink-subtle border border-line",
 };
 
-/** Semantic badge for labels and counts. */
+/** Small label badge — muted, not loud. */
 export function Badge({
   children,
-  variant = "neutral",
+  variant = "muted",
   className = "",
   ...props
 }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${variantClasses[variant]} ${className}`.trim()}
+      className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${variantClasses[variant]} ${className}`.trim()}
       {...props}
     >
       {children}

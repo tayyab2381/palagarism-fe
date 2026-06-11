@@ -31,29 +31,17 @@ export default function LoginPage() {
 
   function validateForm(): LoginFieldErrors {
     const nextErrors: LoginFieldErrors = {};
-
-    if (!email.trim()) {
-      nextErrors.email = "Email is required";
-    } else if (!isValidEmail(email)) {
-      nextErrors.email = "Enter a valid email address";
-    }
-
-    if (!password) {
-      nextErrors.password = "Password is required";
-    }
-
+    if (!email.trim()) nextErrors.email = "Email is required";
+    else if (!isValidEmail(email)) nextErrors.email = "Enter a valid email";
+    if (!password) nextErrors.password = "Password is required";
     return nextErrors;
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     const fieldErrors = validateForm();
     setErrors(fieldErrors);
-
-    if (Object.keys(fieldErrors).length > 0) {
-      return;
-    }
+    if (Object.keys(fieldErrors).length > 0) return;
 
     setIsLoading(true);
     setErrors({});
@@ -65,9 +53,7 @@ export default function LoginPage() {
       });
 
       if (!response.success || !response.data?.token) {
-        setErrors({
-          form: response.error ?? "Invalid email or password",
-        });
+        setErrors({ form: response.error ?? "Invalid email or password" });
         return;
       }
 
@@ -84,55 +70,46 @@ export default function LoginPage() {
   return (
     <AuthLayout>
       <ErrorBoundary fallbackTitle="Sign in unavailable">
-        <Card variant="glass" className="p-8 shadow-glow md:p-10">
-          <h1 className="text-3xl font-bold text-slate-900">Welcome back</h1>
-          <p className="mt-2 text-slate-500">
-            Sign in to run plagiarism checks on your documents.
+        <Card variant="elevated" className="p-8">
+          <h1 className="text-2xl font-semibold text-ink">Sign in</h1>
+          <p className="mt-1 text-sm text-ink-subtle">
+            Access your plagiarism checker.
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
             <AuthField
               id="email"
               label="Email"
               type="email"
-              name="email"
               autoComplete="email"
-              placeholder="you@example.com"
+              placeholder="you@school.edu"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               error={errors.email}
-              icon={<Mail className="h-4 w-4" />}
+              icon={<Mail className="h-4 w-4" strokeWidth={1.5} />}
             />
-
             <AuthField
               id="password"
               label="Password"
               type="password"
-              name="password"
               autoComplete="current-password"
-              placeholder="Your password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               error={errors.password}
-              icon={<Lock className="h-4 w-4" />}
+              icon={<Lock className="h-4 w-4" strokeWidth={1.5} />}
             />
-
             {errors.form ? <FormError>{errors.form}</FormError> : null}
-
-            <AuthSubmitButton isLoading={isLoading} loadingText="Signing in...">
+            <AuthSubmitButton isLoading={isLoading} loadingText="Signing in…">
               Sign in
             </AuthSubmitButton>
           </form>
 
-          <div className="mt-6 border-t border-slate-200 pt-6 text-center text-sm text-slate-500">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/signup"
-              className="font-semibold text-brand-600 hover:text-brand-700"
-            >
-              Create one free
+          <p className="mt-6 text-center text-sm text-ink-subtle">
+            No account?{" "}
+            <Link href="/signup" className="font-medium text-ink hover:underline">
+              Create one
             </Link>
-          </div>
+          </p>
         </Card>
       </ErrorBoundary>
     </AuthLayout>

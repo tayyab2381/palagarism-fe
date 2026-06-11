@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileSearch, History, ShieldCheck } from "lucide-react";
+import { FileSearch, History } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -19,113 +19,100 @@ interface DashboardSidebarProps {
 }
 
 const navItems = [
-  { href: "/dashboard/check", label: "Plagiarism check", icon: FileSearch },
+  { href: "/dashboard/check", label: "Check", icon: FileSearch },
 ] as const;
 
-/** Unified sidebar with nav and session history. */
 export function DashboardSidebar({
   isMobileOpen = false,
   onMobileClose,
 }: DashboardSidebarProps) {
   const pathname = usePathname();
-  const history = usePlagiarismStore((state) => state.history);
-  const currentId = usePlagiarismStore((state) => state.currentResult?.id ?? null);
-  const setCurrentResult = usePlagiarismStore((state) => state.setCurrentResult);
-  const removeResult = usePlagiarismStore((state) => state.removeResult);
-  const clearAll = usePlagiarismStore((state) => state.clearAll);
+  const history = usePlagiarismStore((s) => s.history);
+  const currentId = usePlagiarismStore((s) => s.currentResult?.id ?? null);
+  const setCurrentResult = usePlagiarismStore((s) => s.setCurrentResult);
+  const removeResult = usePlagiarismStore((s) => s.removeResult);
+  const clearAll = usePlagiarismStore((s) => s.clearAll);
   const resultCount = useResultCount();
 
-  const sidebarContent = (
+  const content = (
     <>
-      <Link
-        href="/"
-        className="flex items-center gap-2.5"
-        onClick={onMobileClose}
-      >
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-brand">
-          <ShieldCheck className="h-4 w-4 text-white" />
-        </div>
-        <span className="font-bold text-slate-900">PlagiarCheck</span>
+      <Link href="/" className="text-sm font-semibold text-ink" onClick={onMobileClose}>
+        ← PlagiarCheck
       </Link>
 
-      <nav className="mt-6 space-y-1">
+      <nav className="mt-6">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
-
+          const active = pathname === item.href;
           return (
             <Link
               key={item.href}
               href={item.href}
               onClick={onMobileClose}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-brand-50 text-brand-700"
-                  : "text-slate-600 hover:bg-slate-50"
+              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
+                active
+                  ? "bg-stone-100 font-medium text-ink"
+                  : "text-ink-subtle hover:bg-stone-50"
               }`}
             >
-              <item.icon className="h-4 w-4" />
-              <span className="flex-1">{item.label}</span>
-              {isActive && resultCount > 0 ? (
-                <Badge variant="brand">{resultCount}</Badge>
+              <item.icon className="h-4 w-4" strokeWidth={1.5} />
+              {item.label}
+              {active && resultCount > 0 ? (
+                <Badge variant="muted" className="ml-auto">
+                  {resultCount}
+                </Badge>
               ) : null}
             </Link>
           );
         })}
       </nav>
 
-      <div className="mt-8 border-t border-slate-200 pt-6">
-        <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+      <div className="mt-8 border-t border-line pt-6">
+        <div className="mb-3 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-ink-subtle">
           <History className="h-3.5 w-3.5" />
-          This session
+          Session
         </div>
 
-        <div className="max-h-[calc(100vh-20rem)] space-y-2 overflow-y-auto">
+        <div className="max-h-64 space-y-2 overflow-y-auto">
           {history.length === 0 ? (
-            <p className="text-sm text-slate-500">
-              No checks yet. Run your first scan to see history here.
-            </p>
+            <p className="text-sm text-ink-subtle">No checks yet.</p>
           ) : (
-            history.map((entry) => {
-              const isActive = entry.id === currentId;
-
-              return (
-                <div
-                  key={entry.id}
-                  className={`rounded-xl border p-3 transition-colors ${
-                    isActive
-                      ? "border-brand-200 bg-brand-50/50"
-                      : "border-slate-100 bg-slate-50 hover:border-slate-200"
-                  }`}
+            history.map((entry) => (
+              <div
+                key={entry.id}
+                className={`rounded-lg border px-3 py-2 ${
+                  entry.id === currentId
+                    ? "border-stone-300 bg-stone-50"
+                    : "border-line"
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentResult(entry.id);
+                    onMobileClose?.();
+                  }}
+                  className="w-full text-left"
                 >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCurrentResult(entry.id);
-                      onMobileClose?.();
-                    }}
-                    className="w-full text-left"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="text-sm font-medium text-slate-800">
-                        {entry.title}
-                      </p>
-                      <SimilarityScoreBadge score={entry.result.overallScore} />
-                    </div>
-                    <p className="mt-1 text-xs text-slate-500">
-                      {formatCheckedAt(entry.checkedAt)}
-                    </p>
-                  </button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => removeResult(entry.id)}
-                    className="mt-2 h-8 w-full px-2 py-1 text-xs"
-                  >
-                    Remove
-                  </Button>
-                </div>
-              );
-            })
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-sm font-medium text-ink">
+                      {entry.title}
+                    </span>
+                    <SimilarityScoreBadge score={entry.result.overallScore} />
+                  </div>
+                  <span className="text-xs text-ink-subtle">
+                    {formatCheckedAt(entry.checkedAt)}
+                  </span>
+                </button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => removeResult(entry.id)}
+                  className="mt-1 h-7 w-full px-2 text-xs"
+                >
+                  Remove
+                </Button>
+              </div>
+            ))
           )}
         </div>
 
@@ -134,9 +121,9 @@ export function DashboardSidebar({
             type="button"
             variant="secondary"
             onClick={clearAll}
-            className="mt-4 w-full text-sm"
+            className="mt-3 w-full text-sm"
           >
-            Clear all history
+            Clear session
           </Button>
         ) : null}
       </div>
@@ -145,9 +132,9 @@ export function DashboardSidebar({
 
   return (
     <>
-      <aside className="hidden w-[300px] shrink-0 lg:block">
-        <Card variant="elevated" className="sticky top-24 p-5">
-          {sidebarContent}
+      <aside className="hidden w-64 shrink-0 lg:block">
+        <Card variant="outline" className="sticky top-20 p-4">
+          {content}
         </Card>
       </aside>
 
@@ -155,15 +142,12 @@ export function DashboardSidebar({
         <div className="fixed inset-0 z-50 lg:hidden">
           <button
             type="button"
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
-            aria-label="Close navigation"
+            className="absolute inset-0 bg-stone-900/20"
+            aria-label="Close"
             onClick={onMobileClose}
           />
-          <Card
-            variant="elevated"
-            className="absolute left-0 top-0 h-full w-[300px] overflow-y-auto rounded-l-none p-5"
-          >
-            {sidebarContent}
+          <Card className="absolute left-0 top-0 h-full w-64 overflow-y-auto rounded-none p-4">
+            {content}
           </Card>
         </div>
       ) : null}

@@ -1,59 +1,44 @@
 import { BookOpen, GraduationCap, Microscope } from "lucide-react";
-import { Card } from "@/components/ui/Card";
 import { SectionHeading } from "@/components/ui/StatBlock";
 
 const useCases = [
   {
     title: "Students",
     icon: GraduationCap,
-    initials: "ST",
-    gradient: "from-brand-500 to-violet-500",
-    scenario:
-      "Submit essays and assignments with confidence. Catch accidental overlap before your professor does.",
+    text: "Run a check before you submit. See which sentences overlap with online sources.",
   },
   {
     title: "Researchers",
     icon: Microscope,
-    initials: "RS",
-    gradient: "from-teal-500 to-brand-500",
-    scenario:
-      "Verify originality in papers and literature reviews. See matched sources with direct links.",
+    text: "Sanity-check drafts and literature reviews without sending files to a third party.",
   },
   {
     title: "Educators",
     icon: BookOpen,
-    initials: "ED",
-    gradient: "from-amber-500 to-rose-500",
-    scenario:
-      "Recommend a free tool students can use proactively — no institutional license required.",
+    text: "Point students to a free tool they can use on their own, before the deadline.",
   },
 ] as const;
 
-/** Persona-based use cases replacing fake testimonials. */
 export function UseCasesSection() {
   return (
     <section className="pb-section" id="use-cases">
       <SectionHeading
-        title="Made for every writer"
-        subtitle="Whether you're submitting a thesis or grading a class, PlagiarCheck fits your workflow."
+        title="Who it's for"
+        subtitle="Same tool, different reasons to open it."
       />
 
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
+      <div className="mt-8 grid gap-4 md:grid-cols-3">
         {useCases.map((item) => (
-          <Card key={item.title} hover variant="elevated">
-            <div
-              className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${item.gradient} text-sm font-bold text-white shadow-glow-sm`}
-            >
-              {item.initials}
-            </div>
-            <div className="mb-2 flex items-center gap-2">
-              <item.icon className="h-4 w-4 text-brand-600" />
-              <h3 className="font-semibold text-slate-900">{item.title}</h3>
-            </div>
-            <p className="text-sm leading-relaxed text-slate-500">
-              {item.scenario}
+          <article
+            key={item.title}
+            className="rounded-xl border border-line bg-surface p-5"
+          >
+            <item.icon className="h-5 w-5 text-ink-subtle" strokeWidth={1.5} />
+            <h3 className="mt-3 font-semibold text-ink">{item.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-ink-subtle">
+              {item.text}
             </p>
-          </Card>
+          </article>
         ))}
       </div>
     </section>

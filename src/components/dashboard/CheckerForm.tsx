@@ -21,7 +21,6 @@ interface CheckerFormProps {
   onSubmit: () => void;
 }
 
-/** Premium checker form with icon header and gradient loading. */
 export function CheckerForm({
   title,
   text,
@@ -32,72 +31,61 @@ export function CheckerForm({
   onSubmit,
 }: CheckerFormProps) {
   const wordCount = countWords(text);
-  const isOverLimit = wordCount > MAX_WORDS;
-  const canSubmit = wordCount > 0 && !isOverLimit && !isChecking;
+  const over = wordCount > MAX_WORDS;
+  const canSubmit = wordCount > 0 && !over && !isChecking;
 
   return (
     <Card variant="elevated">
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-brand shadow-glow-sm">
-            <FileText className="h-5 w-5 text-white" />
-          </div>
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div className="flex gap-3">
+          <FileText className="mt-0.5 h-5 w-5 text-ink-subtle" strokeWidth={1.5} />
           <div>
-            <h2 className="font-semibold text-slate-900">New plagiarism check</h2>
-            <p className="text-sm text-slate-500">Paste up to 5,000 words</p>
+            <h2 className="font-semibold text-ink">New check</h2>
+            <p className="text-sm text-ink-subtle">Optional title, then paste below</p>
           </div>
         </div>
-        <Badge variant={isOverLimit ? "rose" : "neutral"}>
+        <Badge variant={over ? "rose" : "muted"}>
           {wordCount.toLocaleString()} / {MAX_WORDS.toLocaleString()}
         </Badge>
       </div>
 
       <TextInput
-        type="text"
-        placeholder="Give this check a name (optional)"
+        placeholder="Title (optional)"
         value={title}
-        onChange={(event) => onTitleChange(event.target.value)}
+        onChange={(e) => onTitleChange(e.target.value)}
         aria-label="Check title"
       />
 
       <TextArea
-        placeholder="Paste your essay, paper, or article here..."
+        placeholder="Paste your text here…"
         value={text}
-        onChange={(event) => onTextChange(event.target.value)}
-        className="mt-4 min-h-52 resize-y"
+        onChange={(e) => onTextChange(e.target.value)}
+        className="mt-3 min-h-48"
         aria-label="Text to check"
       />
 
-      {isOverLimit ? (
-        <FormError className="mt-4">
-          Text exceeds the {MAX_WORDS.toLocaleString()} word limit. Please shorten
-          your text before checking.
+      {over ? (
+        <FormError className="mt-3">
+          Over the {MAX_WORDS.toLocaleString()} word limit.
         </FormError>
       ) : null}
-
-      {error ? <FormError className="mt-4">{error}</FormError> : null}
+      {error ? <FormError className="mt-3">{error}</FormError> : null}
 
       {isChecking ? (
-        <div className="mt-6">
-          <div className="relative h-2 overflow-hidden rounded-full bg-slate-100">
-            <div className="absolute inset-y-0 left-0 w-1/3 animate-shimmer rounded-full bg-gradient-brand" />
+        <div className="mt-5">
+          <div className="h-1 overflow-hidden rounded-full bg-stone-100">
+            <div className="h-full w-1/3 animate-shimmer rounded-full bg-stone-400" />
           </div>
-          <p className="mt-3 text-sm text-slate-500">
-            Scanning across the web for matches...
-          </p>
-          <div className="mt-6 space-y-3">
-            <div className="h-24 animate-pulse rounded-xl bg-slate-100" />
-            <div className="h-16 animate-pulse rounded-xl bg-slate-100" />
-          </div>
+          <p className="mt-2 text-sm text-ink-subtle">Scanning…</p>
         </div>
       ) : (
         <Button
           type="button"
-          className="mt-6 w-full"
+          className="mt-5 w-full"
           disabled={!canSubmit}
           onClick={onSubmit}
         >
-          Check for plagiarism
+          Run check
         </Button>
       )}
     </Card>

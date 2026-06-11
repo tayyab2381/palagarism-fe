@@ -14,7 +14,6 @@ interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-/** Client error boundary for major page sections. */
 export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
@@ -29,7 +28,7 @@ export class ErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error("ErrorBoundary caught:", error, errorInfo);
+    console.error("ErrorBoundary:", error, errorInfo);
   }
 
   handleReset = (): void => {
@@ -39,16 +38,15 @@ export class ErrorBoundary extends Component<
   render(): ReactNode {
     if (this.state.hasError) {
       return (
-        <Card variant="elevated" className="text-center">
-          <h2 className="text-lg font-semibold text-slate-900">
+        <Card variant="outline" className="text-center">
+          <h2 className="font-semibold text-ink">
             {this.props.fallbackTitle ?? "Something went wrong"}
           </h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-slate-500">
-            {this.props.fallbackDescription ??
-              "This section failed to load. Please try again."}
+          <p className="mx-auto mt-2 max-w-sm text-sm text-ink-subtle">
+            {this.props.fallbackDescription ?? "Try again."}
           </p>
-          <Button type="button" onClick={this.handleReset} className="mt-6">
-            Try again
+          <Button type="button" onClick={this.handleReset} className="mt-4">
+            Retry
           </Button>
         </Card>
       );

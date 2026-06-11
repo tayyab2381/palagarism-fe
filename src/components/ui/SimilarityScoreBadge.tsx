@@ -11,7 +11,6 @@ function getVariant(score: number): "teal" | "amber" | "rose" {
   return "rose";
 }
 
-/** Semantic similarity score badge. */
 export function SimilarityScoreBadge({
   score,
   className = "",

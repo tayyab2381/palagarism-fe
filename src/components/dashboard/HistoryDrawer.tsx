@@ -15,7 +15,6 @@ interface HistoryDrawerProps {
   onClearAll: () => void;
 }
 
-/** Mobile bottom drawer for session history. */
 export function HistoryDrawer({
   isOpen,
   history,
@@ -24,26 +23,20 @@ export function HistoryDrawer({
   onSelect,
   onClearAll,
 }: HistoryDrawerProps) {
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
       <button
         type="button"
-        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
-        aria-label="Close history"
+        className="absolute inset-0 bg-stone-900/20"
+        aria-label="Close"
         onClick={onClose}
       />
-
-      <Card
-        variant="elevated"
-        className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto rounded-b-none p-5"
-      >
-        <div className="mb-4 flex items-center justify-between">
-          <p className="text-sm font-semibold text-slate-900">Session history</p>
-          <Button type="button" variant="ghost" onClick={onClose} className="px-3 py-2">
+      <Card className="absolute bottom-0 left-0 right-0 max-h-[75vh] overflow-y-auto rounded-b-none p-4">
+        <div className="mb-3 flex items-center justify-between">
+          <span className="font-medium text-ink">Session history</span>
+          <Button variant="ghost" onClick={onClose} className="px-2 py-1 text-sm">
             Close
           </Button>
         </div>
@@ -57,34 +50,31 @@ export function HistoryDrawer({
                 onSelect(entry.id);
                 onClose();
               }}
-              className={`w-full rounded-xl border p-3 text-left transition-colors ${
-                entry.id === currentId
-                  ? "border-brand-200 bg-brand-50/50"
-                  : "border-slate-100 bg-slate-50"
+              className={`w-full rounded-lg border px-3 py-2 text-left ${
+                entry.id === currentId ? "border-stone-300 bg-stone-50" : "border-line"
               }`}
             >
-              <div className="flex items-start justify-between gap-2">
-                <p className="text-sm font-medium text-slate-800">{entry.title}</p>
+              <div className="flex justify-between gap-2">
+                <span className="text-sm font-medium text-ink">{entry.title}</span>
                 <SimilarityScoreBadge score={entry.result.overallScore} />
               </div>
-              <p className="mt-1 text-xs text-slate-500">
+              <span className="text-xs text-ink-subtle">
                 {formatCheckedAt(entry.checkedAt)}
-              </p>
+              </span>
             </button>
           ))}
         </div>
 
         {history.length > 0 ? (
           <Button
-            type="button"
             variant="secondary"
             onClick={() => {
               onClearAll();
               onClose();
             }}
-            className="mt-4 w-full"
+            className="mt-3 w-full"
           >
-            Clear all history
+            Clear session
           </Button>
         ) : null}
       </Card>

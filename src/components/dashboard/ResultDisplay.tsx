@@ -10,70 +10,60 @@ interface ResultDisplayProps {
   result: PlagiarismResult;
 }
 
-const statIcons = {
-  words: FileText,
-  unique: BarChart3,
-  matches: AlignLeft,
-} as const;
+const statMeta = [
+  { key: "words" as const, label: "Words", icon: FileText },
+  { key: "unique" as const, label: "Unique", icon: BarChart3 },
+  { key: "matches" as const, label: "Matches", icon: AlignLeft },
+];
 
-/** Full plagiarism result with gradient score and match list. */
 export function ResultDisplay({ result }: ResultDisplayProps) {
   const stats = [
-    {
-      key: "words" as const,
-      label: "Total words",
-      value: result.wordCount.toLocaleString(),
-    },
-    {
-      key: "unique" as const,
-      label: "Unique content",
-      value: `${result.uniqueScore}%`,
-    },
-    {
-      key: "matches" as const,
-      label: "Matches found",
-      value: result.matches.length.toLocaleString(),
-    },
+    { key: "words" as const, value: result.wordCount.toLocaleString() },
+    { key: "unique" as const, value: `${result.uniqueScore}%` },
+    { key: "matches" as const, value: String(result.matches.length) },
   ];
 
   return (
     <Card variant="elevated" className="mt-6">
-      <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-start">
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <ScoreCircle score={result.overallScore} />
 
-        <div className="grid w-full flex-1 gap-4 sm:grid-cols-3">
+        <div className="grid flex-1 gap-3 sm:grid-cols-3">
           {stats.map((stat) => {
-            const Icon = statIcons[stat.key];
+            const meta = statMeta.find((m) => m.key === stat.key)!;
             return (
-              <Card key={stat.label} variant="muted" className="p-4">
-                <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50">
-                  <Icon className="h-4 w-4 text-brand-600" />
-                </div>
-                <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
-                <p className="mt-1 text-xs text-slate-500">{stat.label}</p>
-              </Card>
+              <div
+                key={stat.key}
+                className="rounded-lg border border-line px-4 py-3"
+              >
+                <meta.icon className="mb-2 h-4 w-4 text-ink-subtle" strokeWidth={1.5} />
+                <p className="text-xl font-semibold tabular-nums text-ink">
+                  {stat.value}
+                </p>
+                <p className="text-xs text-ink-subtle">{meta.label}</p>
+              </div>
             );
           })}
         </div>
       </div>
 
-      <div className="mt-8">
-        <div className="mb-4 flex flex-wrap items-center gap-3">
-          <h2 className="text-lg font-semibold text-slate-900">Matched sources</h2>
-          <Badge variant="brand">{result.matches.length} found</Badge>
+      <div className="mt-8 border-t border-line pt-6">
+        <div className="mb-4 flex items-center gap-2">
+          <h2 className="font-semibold text-ink">Sources</h2>
+          <Badge variant="muted">{result.matches.length}</Badge>
         </div>
 
         {result.matches.length === 0 ? (
           <EmptyState
-            title="No matches found"
-            description="No significant matches were detected. Your content appears largely unique."
+            title="No matches"
+            description="Nothing significant turned up in this scan."
             className="border-0 bg-transparent p-0 shadow-none"
           />
         ) : (
           <div className="space-y-3">
             {result.matches.map((match) => (
               <MatchCard
-                key={`${match.url}-${match.similarity}-${match.matchedText.slice(0, 32)}`}
+                key={`${match.url}-${match.similarity}`}
                 match={match}
               />
             ))}

@@ -17,34 +17,30 @@ import {
 
 const MAX_WORDS = 5_000;
 
-/** Main checker — form and results; history lives in unified sidebar. */
 export function CheckerDashboard() {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const currentResult = usePlagiarismStore((state) => state.currentResult);
-  const history = usePlagiarismStore((state) => state.history);
-  const isChecking = usePlagiarismStore((state) => state.isChecking);
-  const error = usePlagiarismStore((state) => state.error);
-  const addResult = usePlagiarismStore((state) => state.addResult);
-  const setCurrentResult = usePlagiarismStore((state) => state.setCurrentResult);
-  const clearAll = usePlagiarismStore((state) => state.clearAll);
-  const setChecking = usePlagiarismStore((state) => state.setChecking);
-  const setError = usePlagiarismStore((state) => state.setError);
-
+  const currentResult = usePlagiarismStore((s) => s.currentResult);
+  const history = usePlagiarismStore((s) => s.history);
+  const isChecking = usePlagiarismStore((s) => s.isChecking);
+  const error = usePlagiarismStore((s) => s.error);
+  const addResult = usePlagiarismStore((s) => s.addResult);
+  const setCurrentResult = usePlagiarismStore((s) => s.setCurrentResult);
+  const clearAll = usePlagiarismStore((s) => s.clearAll);
+  const setChecking = usePlagiarismStore((s) => s.setChecking);
+  const setError = usePlagiarismStore((s) => s.setError);
   const resultCount = useResultCount();
 
   async function handleSubmit() {
-    const wordCount = countWords(text);
-
-    if (wordCount === 0) {
-      setError("Please paste some text before checking.");
+    const wc = countWords(text);
+    if (wc === 0) {
+      setError("Paste some text first.");
       return;
     }
-
-    if (wordCount > MAX_WORDS) {
-      setError(`Text exceeds the ${MAX_WORDS.toLocaleString()} word limit.`);
+    if (wc > MAX_WORDS) {
+      setError(`Over the ${MAX_WORDS.toLocaleString()} word limit.`);
       return;
     }
 
@@ -52,16 +48,14 @@ export function CheckerDashboard() {
     setError(null);
 
     try {
-      const response = await runPlagiarismCheck(text, title);
-
-      if (!response.success || !response.data) {
-        setError(response.error ?? "Plagiarism check failed. Please try again.");
+      const res = await runPlagiarismCheck(text, title);
+      if (!res.success || !res.data) {
+        setError(res.error ?? "Check failed.");
         return;
       }
-
-      addResult(title, text, response.data);
+      addResult(title, text, res.data);
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Something went wrong.");
     } finally {
       setChecking(false);
     }
@@ -75,11 +69,9 @@ export function CheckerDashboard() {
         onClick={() => setIsDrawerOpen(true)}
         className="mb-4 gap-2 lg:hidden"
       >
-        <History className="h-4 w-4" />
+        <History className="h-4 w-4" strokeWidth={1.5} />
         History
-        {resultCount > 0 ? (
-          <Badge variant="brand">{resultCount}</Badge>
-        ) : null}
+        {resultCount > 0 ? <Badge variant="muted">{resultCount}</Badge> : null}
       </Button>
 
       <CheckerForm
@@ -98,7 +90,7 @@ export function CheckerDashboard() {
         <div className="mt-6">
           <EmptyState
             title="No results yet"
-            description="Paste your text above and run a plagiarism check. Results will appear here with similarity scores and matched sources."
+            description="Run a check and your similarity report will show here."
           />
         </div>
       ) : null}

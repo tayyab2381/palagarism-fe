@@ -11,7 +11,6 @@ interface EmptyStateProps {
   className?: string;
 }
 
-/** Empty state with default icon and card wrapper. */
 export function EmptyState({
   icon: Icon = FileSearch,
   title,
@@ -20,15 +19,15 @@ export function EmptyState({
   className = "",
 }: EmptyStateProps) {
   return (
-    <Card variant="muted" className={`text-center ${className}`.trim()}>
-      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-brand shadow-glow-sm">
-        <Icon className="h-6 w-6 text-white" />
+    <Card variant="outline" className={`text-center ${className}`.trim()}>
+      <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-stone-100">
+        <Icon className="h-5 w-5 text-ink-subtle" strokeWidth={1.5} />
       </div>
-      <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-      <p className="mx-auto mt-2 max-w-sm text-sm text-slate-500">
+      <h3 className="font-semibold text-ink">{title}</h3>
+      <p className="mx-auto mt-1.5 max-w-sm text-sm text-ink-subtle">
         {description}
       </p>
-      {action ? <div className="mt-6">{action}</div> : null}
+      {action ? <div className="mt-5">{action}</div> : null}
     </Card>
   );
 }

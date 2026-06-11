@@ -3,57 +3,50 @@ import { SectionHeading } from "@/components/ui/StatBlock";
 
 const steps = [
   {
-    number: "1",
     title: "Paste your text",
-    description: "Drop your essay or paper into the checker — up to 5,000 words.",
+    description: "Essays, papers, articles — up to 5,000 words per check.",
     icon: ClipboardPaste,
   },
   {
-    number: "2",
-    title: "We scan the web",
-    description: "Our engine compares your writing against public sources instantly.",
+    title: "Scan against the web",
+    description: "We compare your writing to publicly indexed sources.",
     icon: FileSearch,
   },
   {
-    number: "3",
-    title: "Review your report",
-    description: "Get a similarity score with matched URLs and highlighted passages.",
+    title: "Read the report",
+    description: "Similarity score, matched URLs, and quoted passages.",
     icon: Sparkles,
   },
 ] as const;
 
-/** Connected timeline steps with gradient nodes. */
 export function HowItWorksSection() {
   return (
     <section className="pb-section" id="how-it-works">
       <SectionHeading
         title="How it works"
-        subtitle="Three simple steps from paste to a detailed similarity report."
+        subtitle="Three steps. No uploads, no integrations, no learning curve."
       />
 
-      <div className="relative mt-14 grid gap-8 md:grid-cols-3">
-        <div
-          className="absolute left-0 right-0 top-8 hidden h-0.5 bg-gradient-to-r from-brand-200 via-brand-400 to-brand-200 md:block"
-          aria-hidden
-        />
-
-        {steps.map((step) => (
-          <div key={step.number} className="relative text-center md:text-left">
-            <div className="relative z-10 mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-brand shadow-glow-sm md:mx-0">
-              <step.icon className="h-7 w-7 text-white" />
-            </div>
-            <p className="mt-2 text-xs font-bold uppercase tracking-wider text-brand-600">
-              Step {step.number}
-            </p>
-            <h3 className="mt-2 text-lg font-semibold text-slate-900">
-              {step.title}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-500">
+      <ol className="mt-10 grid gap-6 md:grid-cols-3">
+        {steps.map((step, index) => (
+          <li
+            key={step.title}
+            className="relative rounded-xl border border-line bg-surface p-6"
+          >
+            <span className="text-xs font-medium tabular-nums text-ink-subtle">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <step.icon
+              className="mt-4 h-5 w-5 text-ink-subtle"
+              strokeWidth={1.5}
+            />
+            <h3 className="mt-3 font-semibold text-ink">{step.title}</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-ink-subtle">
               {step.description}
             </p>
-          </div>
+          </li>
         ))}
-      </div>
+      </ol>
     </section>
   );
 }
